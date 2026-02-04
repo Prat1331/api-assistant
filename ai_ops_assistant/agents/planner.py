@@ -1,8 +1,4 @@
 def create_plan(user_input: str) -> dict:
-    """
-    Rule-based planner that simulates LLM planning.
-    """
-
     steps = []
     text = user_input.lower()
 

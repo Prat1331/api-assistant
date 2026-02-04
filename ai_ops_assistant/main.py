@@ -3,7 +3,7 @@ from agents.executor import execute_plan
 from agents.verifier import verify_results
 
 if __name__ == "__main__":
-    task = "Find top AI GitHub repositories"
+    task = "Find top AI GitHub repositories and weather in London"
 
     plan = create_plan(task)
     print("PLAN:")
