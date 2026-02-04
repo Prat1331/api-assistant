@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()   # 👈 ADD THIS LINE
+load_dotenv()
 
 def get_weather(city: str) -> dict:
     api_key = os.getenv("WEATHER_API_KEY")
@@ -18,7 +18,12 @@ def get_weather(city: str) -> dict:
     }
 
     response = requests.get(url, params=params)
-    response.raise_for_status()
+
+    if response.status_code != 200:
+        return {
+            "city": city,
+            "error": "Weather API unavailable (free tier / activation issue)"
+        }
 
     data = response.json()
 

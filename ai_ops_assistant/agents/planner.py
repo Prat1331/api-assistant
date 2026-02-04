@@ -14,5 +14,11 @@ def create_plan(user_input: str) -> dict:
             "action": "get_weather",
             "city": "London"
         })
+        
+    if "posts" in text:
+        steps.append({
+            "action": "get_posts",
+            "limit": 5
+        })    
 
     return {"steps": steps}
