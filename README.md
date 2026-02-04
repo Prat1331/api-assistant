@@ -51,24 +51,28 @@ Final Output
 ```
 ai_ops_assistant/
 ├── agents/
-│   ├── planner.py      # Generates execution plan
-│   ├── executor.py     # Executes plan using tools
-│   └── verifier.py     # Validates and formats results
+│ ├── planner.py # Generates structured execution plan
+│ ├── executor.py # Executes plan using tools
+│ └── verifier.py # Validates and formats results
 ├── tools/
-│   └── github_tool.py  # GitHub API integration
-├── main.py             # CLI entry point
+│ ├── github_tool.py # GitHub API integration
+│ ├── posts_tool.py # JSONPlaceholder API integration
+│ └── weather_tool.py # OpenWeatherMap API integration
+├── main.py # CLI entry point
 ├── requirements.txt
 ├── .env.example
 ├── README.md
-```
 
 ---
 
 ## APIs Used
 
-- **GitHub REST API**
-  - Searches repositories
-  - Fetches repository metadata such as stars and URLs
+- GitHub REST API – search public repositories
+- JSONPlaceholder API – fetch sample posts
+- OpenWeatherMap API – weather data (gracefully handled on free-tier limitations)
+
+
+
 
 This satisfies the requirement for **real third-party API integration**.
 
@@ -113,11 +117,9 @@ Find top AI GitHub repositories
 ```json
 {
   "steps": [
-    {
-      "action": "search_github",
-      "query": "AI",
-      "limit": 5
-    }
+    { "action": "search_github", "query": "AI", "limit": 5 },
+    { "action": "get_weather", "city": "London" },
+    { "action": "get_posts", "limit": 5 }
   ]
 }
 ```
@@ -125,26 +127,19 @@ Find top AI GitHub repositories
 ### Executor Output
 ```json
 {
-  "github_results": [
-    {
-      "name": "Significant-Gravitas/AutoGPT",
-      "stars": 181689,
-      "url": "https://github.com/Significant-Gravitas/AutoGPT"
-    }
-  ]
+  "github_results": [...],
+  "weather": {
+    "city": "London",
+    "error": "Weather API unavailable (free tier / activation issue)"
+  },
+  "posts": [...]
 }
 ```
 
 ### Final Verified Output
 ```json
 {
-  "github_results": [
-    {
-      "name": "Significant-Gravitas/AutoGPT",
-      "stars": 181689,
-      "url": "https://github.com/Significant-Gravitas/AutoGPT"
-    }
-  ],
+  "github_results": [...],
   "status": "success"
 }
 ```
@@ -153,9 +148,19 @@ Find top AI GitHub repositories
 
 ## Error Handling
 
-- Graceful handling of empty API responses
-- Clear fallback messages when no results are found
-- Deterministic execution without runtime failures
+- Graceful handling of third-party API failures
+- Non-blocking execution when optional tools fail
+- No runtime crashes due to external API issues
+- Deterministic execution with structured outputs
+
+---
+
+## Known Limitations & Tradeoffs
+
+- OpenWeatherMap free-tier API keys may return 401 Unauthorized due to activation or account restrictions.
+The system handles this gracefully and continues execution.
+- Planner logic is rule-based for reliability and local execution, simulating LLM reasoning.
+- No persistent storage or caching is implemented.
 
 ---
 
