@@ -1,20 +1,22 @@
-import json
-from llm.gemini_client import call_llm
-
 def create_plan(user_input: str) -> dict:
-    prompt = f"""
-You are a planner agent.
-Convert the user request into a JSON plan.
+    """
+    Rule-based planner that simulates LLM planning.
+    """
 
-Allowed actions:
-- search_github(query, limit)
-- get_weather(city)
+    steps = []
+    text = user_input.lower()
 
-User request:
-"{user_input}"
+    if "github" in text or "repo" in text:
+        steps.append({
+            "action": "search_github",
+            "query": "AI",
+            "limit": 5
+        })
 
-Return ONLY valid JSON.
-"""
+    if "weather" in text:
+        steps.append({
+            "action": "get_weather",
+            "city": "London"
+        })
 
-    response = call_llm(prompt)
-    return json.loads(response)
+    return {"steps": steps}
