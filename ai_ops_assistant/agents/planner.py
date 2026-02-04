@@ -1,5 +1,5 @@
 import json
-from llm.openai_client import call_llm
+from llm.gemini_client import call_llm
 
 def create_plan(user_input: str) -> dict:
     prompt = f"""

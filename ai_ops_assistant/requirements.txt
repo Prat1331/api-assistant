@@ -1,3 +1,5 @@
 requests
 python-dotenv
-openai
+google-generativeai
+google-genai
+
